@@ -1,0 +1,123 @@
+﻿
+@{
+    ViewBag.Title = "Stripe";
+}
+
+<!-- pages-title-start -->
+<div class="pages-title section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="pages-title-text text-center">
+                    <h2>Stripe</h2>
+                    <ul class="text-left">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="pages login-page section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+            </div>
+
+            <div class="col-sm-6">
+                <div class="main-input padding60 new-customer">
+                    <div class="log-title">
+                        <h3>
+                            <strong>
+                                Stripe Payment Information
+                                <b style="background-color:antiquewhite"> <br /> (<strong class="pricesymbol"> </strong> @ViewBag.Amount )</b>
+                            </strong>
+                        </h3>
+                    </div>
+                    <div class="custom-input">
+                        <form class="register" action="@Url.Action("StripeAsync","Payment")" method="post" id="payment-form">
+                            <div class="form-group">
+                                <input required class="form-control text-box single-line" id="Name" name="Name" placeholder="Full Name:" type="text" value="">
+                            </div>
+                            <div class="form-group">
+                                <input required class="form-control text-box single-line" id="Phone" name="Phone" placeholder="Phone #:" type="text" value="">
+                            </div>
+                            <div class="form-group">
+                                <input required class="email form-control text-box single-line valid" id="EmailId" name="Email" placeholder="Email Address:" type="text" value="" aria-describedby="EmailId-error" aria-invalid="false">
+                            </div>
+                            <div class="form-group">
+                                <div id="card-element" class="email form-control text-box single-line valid">
+                                </div>
+                                <div id="card-errors" role="alert"></div>
+                            </div>
+                            <div class="submit-text coupon">
+                                <button type="submit" value="Submit Payment" class="btn btn-success" id="btnAddSale">Submit Payment </button>
+                                <a href="@Url.Action("Index","Home")" class="btn btn-success" id="btnBack">Go Back</a>
+                            </div>
+                            @if (TempData["error"] != null)
+                            {
+                                <div class="form-group" style="background-color: #fde0e5; text-align: center;">
+
+                                    <div class="submit-text coupon">
+                                        <strong> @(TempData["error"] != null ? TempData["error"].ToString() : "")</strong>
+                                    </div>
+                                </div>
+                            }
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    var stripe = Stripe('pk_test_51KBa9uANh8Y9GkzK7cQ2kfC8BZ8CDeobVXBmzaneREH4IBO6JVqV6CM1UoBrEbJHgAhWU9pRinoNxtYSABSCzOs900C7tNk6bM');
+    var elements = stripe.elements();
+    var style = {
+        base: {
+            fontSize: '16px',
+            color: '#32325d',
+        },
+    };
+    var card = elements.create('card', { style: style });
+    card.mount('#card-element');
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function (event) {
+
+        event.preventDefault();
+        $('#btnAddSale').attr('disabled', 'disabled');
+        stripe.createToken(card).then(function (result) {
+            //document.getElementsByClassName("loader-container")[0].style.display = "block";
+
+            if (result.error) {
+                $('#btnAddSale').removeAttr('disabled');
+
+                var errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+                //document.getElementsByClassName("loader-container")[0].style.display = "none";
+
+            } else {
+                //toastr.info("Please Wait !");
+                stripeTokenHandler(result.token);
+            }
+        });
+    });
+    function stripeTokenHandler(token) {
+        var form = document.getElementById('payment-form');
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'stripeToken');
+        hiddenInput.setAttribute('value', token.id);
+        form.appendChild(hiddenInput);
+        form.submit();
+    }
+</script>
+
+
