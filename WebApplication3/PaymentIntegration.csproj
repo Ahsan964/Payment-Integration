@@ -48,6 +48,7 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PayPal, Version=1.9.1.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
       <HintPath>..\packages\PayPal.1.9.1\lib\net451\PayPal.dll</HintPath>
@@ -186,6 +187,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Payment\Stripe.cshtml" />
     <Content Include="Views\Payment\PaymentStatus.cshtml" />
+    <Content Include="Views\Payment\PayPal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
